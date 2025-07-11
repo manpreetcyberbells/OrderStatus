@@ -28,7 +28,7 @@ RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data .
 RUN chmod +x ./start.sh
 
 # Expose port (Railway uses PORT env variable)
-EXPOSE 8000
+EXPOSE 8008
 
 # Run Laravel through custom script on container start
 CMD ["./start.sh"]
