@@ -2,22 +2,28 @@
 
 set -e
 
-echo "Using Railway environment variables..."
+echo "🟡 Using Railway environment variables..."
+echo "🟢 APP_KEY: ${APP_KEY:0:10}..."
 
-# Generate APP_KEY if missing
+# Generate key if needed
 if [ -z "$APP_KEY" ]; then
-    echo "APP_KEY is not set. Generating..."
+    echo "⚠️ APP_KEY is not set. Generating..."
     php artisan key:generate
 fi
 
-# Run migrations only once
+# Migrations
 if [ ! -f /var/www/.migrated ]; then
-    echo "Running migrations..."
+    echo "📦 Running migrations..."
     php artisan migrate --force
     touch /var/www/.migrated
 else
-    echo "Migrations already done. Skipping..."
+    echo "✅ Migrations already done. Skipping..."
 fi
 
-# Start server on Railway-injected PORT
+# Print route list for debugging
+echo "🔍 Laravel route list:"
+php artisan route:list || echo "⚠️ route:list failed"
+
+# Start server
+echo "🚀 Starting server on port ${PORT}..."
 php artisan serve --host=0.0.0.0 --port="${PORT}"
