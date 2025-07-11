@@ -28,7 +28,7 @@ class OrderStatusController extends Controller
         $url = "https://{$apiKey}:{$apiPassword}@{$shopDomain}/admin/api/2024-04/orders.json";
         $response = Http::get($url, [
             'name' => '#' . $orderNumber,
-        ]);
+        ]); 
 
         $data = $response->json();
         if ($response->failed() || empty($response['orders'])) {
