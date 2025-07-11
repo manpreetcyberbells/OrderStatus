@@ -6,10 +6,10 @@ set -e  # Exit on error
 # sleep 5
 
 # Check if .env exists
-if [ ! -f .env ]; then
-    echo ".env file not found! Please ensure it is present."
-    exit 1
-fi
+# if [ ! -f .env ]; then
+#     echo ".env file not found! Please ensure it is present."
+#     exit 1
+# fi
 
 # Generate APP_KEY if not already set
 if grep -q "^APP_KEY=$" .env || ! grep -q "^APP_KEY=" .env; then
