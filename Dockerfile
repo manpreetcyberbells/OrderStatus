@@ -1,3 +1,4 @@
+FROM composer:latest AS composer_stage
 FROM php:8.2-fpm
 
 # Install system dependencies
@@ -9,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# ✅ Correct: Install Composer from previous stage
+COPY --from=composer_stage /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www
@@ -18,17 +19,17 @@ WORKDIR /var/www
 # Copy app files
 COPY . .
 
-# Install PHP dependencies (prod ready)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions (for storage & cache)
+# Set permissions
 RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data .
 
-# Make sure start.sh is executable
+# Make script executable
 RUN chmod +x ./start.sh
 
-# Expose dynamic port (default fallback)
+# Expose dynamic port
 EXPOSE 8081
 
-# Start the Laravel app via shell script
+# Start app
 CMD ["./start.sh"]
