@@ -1,22 +1,13 @@
 #!/bin/bash
 
-set -e  # Exit on error
+set -e
 
-# Wait for database (optional: useful in cloud deploys)
-# sleep 5
+echo "Using Railway environment variables..."
 
-# Check if .env exists
-# if [ ! -f .env ]; then
-#     echo ".env file not found! Please ensure it is present."
-#     exit 1
-# fi
-
-# Generate APP_KEY if not already set
-if grep -q "^APP_KEY=$" .env || ! grep -q "^APP_KEY=" .env; then
-    echo "Generating app key..."
+# Generate APP_KEY if missing
+if [ -z "$APP_KEY" ]; then
+    echo "APP_KEY is not set. Generating..."
     php artisan key:generate
-else
-    echo "APP_KEY already set. Skipping generation."
 fi
 
 # Run migrations only once
@@ -28,6 +19,5 @@ else
     echo "Migrations already done. Skipping..."
 fi
 
-# Start Laravel server (Railway expects dynamic port)
-echo "Starting Laravel server on port: ${PORT}"
+# Start server on Railway-injected PORT
 php artisan serve --host=0.0.0.0 --port="${PORT}"
