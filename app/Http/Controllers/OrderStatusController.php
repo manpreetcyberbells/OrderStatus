@@ -26,15 +26,11 @@ class OrderStatusController extends Controller
         $shopDomain = env('SHOPIFY_SHOP');
 
         $url = "https://{$apiKey}:{$apiPassword}@{$shopDomain}/admin/api/2024-04/orders.json";
-        // die($url);
         $response = Http::get($url, [
             'name' => '#' . $orderNumber,
         ]);
 
         $data = $response->json();
-
-        // echo"<pre>"; print_r($response->json());  die;
-
         if ($response->failed() || empty($response['orders'])) {
             return response()->json(['error' => 'Order not found'], 404);
         }
