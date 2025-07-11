@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Generate key if missing
-if ! grep -q "APP_KEY=" .env || [ -z "$APP_KEY" ]; then
-    echo "Generating app key..."
-    php artisan key:generate
-fi
+# if ! grep -q "APP_KEY=" .env || [ -z "$APP_KEY" ]; then
+#     echo "Generating app key..."
+#     php artisan key:generate
+# fi
 
 # Run migrations only once
 if [ ! -f /var/www/.migrated ]; then
