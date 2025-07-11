@@ -15,20 +15,20 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy all app files (including your script)
+# Copy app files
 COPY . .
 
-# Install PHP dependencies
+# Install PHP dependencies (prod ready)
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
+# Permissions (for storage & cache)
 RUN chmod -R 775 storage bootstrap/cache && chown -R www-data:www-data .
 
 # Make sure start.sh is executable
 RUN chmod +x ./start.sh
 
-# Expose port (Railway uses PORT env variable)
-EXPOSE 8008
+# Expose dynamic port (default fallback)
+EXPOSE 8081
 
-# Run Laravel through custom script on container start
+# Start the Laravel app via shell script
 CMD ["./start.sh"]
